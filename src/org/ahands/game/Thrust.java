@@ -252,7 +252,13 @@ public class Thrust {
 	static int boostTri = -35;
 	static long exhaustColor = 0;
 	final static PewPews pewPews = new PewPews();
+
 	final static PewPews exhausts = new PewPews();
+	final static PewPews exhausts2 = new PewPews();
+	final static PewPews exhausts3 = new PewPews();
+	final static PewPews exhausts4 = new PewPews();
+	static int ticker = 1;
+
 	static long lastShot = Calendar.getInstance().getTimeInMillis();
 	final static float angleSpeed = 3f;
 	static List<Pew> pewList = new ArrayList<Pew>();
@@ -337,17 +343,76 @@ public class Thrust {
 			}
 		}
 
-		pewList = new ArrayList<Pew>();
+		final List<Pew> pewList1 = new ArrayList<Pew>();
+		final List<Pew> pewList2 = new ArrayList<Pew>();
+		final List<Pew> pewList3 = new ArrayList<Pew>();
+		final List<Pew> pewList4 = new ArrayList<Pew>();
+		long start = Calendar.getInstance().getTimeInMillis();
 		for (Pew pew : exhausts.getPews()) {
-			final float pewX = pew.getX();
-			final float pewY = pew.getY();
-			if (!(pewX >= w - edgeFudge || pewX <= edgeFudge || pewY >= h - edgeFudge || pewY <= edgeFudge)) {
-				pew.update();
-				pewList.add(pew);
+			switch (ticker) {
+			case 1:
+				pewList1.add(pew);
+				break;
+			case 2:
+				pewList2.add(pew);
+				break;
+			case 3:
+				pewList3.add(pew);
+				break;
+			case 4:
+				pewList4.add(pew);
+				break;
 			}
 		}
+		long end = Calendar.getInstance().getTimeInMillis();
+		final long wait = end - start;
+		if (wait > longestWait) {
+			System.out.println(wait);
+			longestWait = wait;
+		}
+
+		final PewSorter ps1 = new PewSorter(w, h, pewList1);
+		final PewSorter ps2 = new PewSorter(w, h, pewList2);
+		final PewSorter ps3 = new PewSorter(w, h, pewList3);
+		final PewSorter ps4 = new PewSorter(w, h, pewList4);
+
+		final Thread t1 = new Thread(ps1);
+		final Thread t2 = new Thread(ps2);
+		final Thread t3 = new Thread(ps3);
+		final Thread t4 = new Thread(ps4);
+
+		t1.start();
+		t2.start();
+		t3.start();
+		t4.start();
+
+		try {
+			t1.join();
+			t2.join();
+			t3.join();
+			t4.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		pewList = new ArrayList<Pew>();
+		pewList.addAll(ps1.getOnScreenPewList());
+		pewList.addAll(ps2.getOnScreenPewList());
+		pewList.addAll(ps3.getOnScreenPewList());
+		pewList.addAll(ps4.getOnScreenPewList());
 		exhausts.setPews(pewList);
-		pewList = null;
+
+		// pewList = new ArrayList<Pew>();
+		// for (Pew pew : exhausts.getPews()) {
+		// final float pewX = pew.getX();
+		// final float pewY = pew.getY();
+		// if (!(pewX >= w - edgeFudge || pewX <= edgeFudge || pewY >= h - edgeFudge || pewY <= edgeFudge)) {
+		// pew.update();
+		// pewList.add(pew);
+		// }
+		// }
+		// exhausts.setPews(pewList);
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
 			System.out.println(exhausts.pewPewSize());
@@ -388,6 +453,10 @@ public class Thrust {
 			}
 		}
 		updateFPS();
+		ticker++;
+		if (ticker > 4) {
+			ticker = 1;
+		}
 	}
 
 	private static long lastFPS;
@@ -421,6 +490,6 @@ public class Thrust {
 		fps++;
 	}
 
-	private static long MAX_BOOST_TRIS = 2500;
+	private static long MAX_BOOST_TRIS = 25000;
 	private static long longestWait = 0;
 }
