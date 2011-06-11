@@ -421,6 +421,6 @@ public class Thrust {
 		fps++;
 	}
 
-	private static long MAX_BOOST_TRIS = 2500;
+	private static long MAX_BOOST_TRIS = 25000;
 	private static long longestWait = 0;
 }
