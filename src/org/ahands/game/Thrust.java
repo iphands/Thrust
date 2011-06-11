@@ -15,22 +15,16 @@ public class Thrust {
 
 	/** Game title */
 	public static final String GAME_TITLE = "Thrust";
-
 	/** Desired frame time */
 	private static final int FRAMERATE = 65;
-
 	/** Exit the game */
 	private static boolean finished;
-
 	/** Angle of rotating square */
 	private static float angle;
-
 	private static float xSpeed;
 	private static float ySpeed;
-
 	private static float x;
 	private static float y;
-
 	private final static int w = 1600;
 	private final static int h = 900;
 
@@ -341,7 +335,7 @@ public class Thrust {
 		for (Pew pew : exhausts.getPews()) {
 			final float pewX = pew.getX();
 			final float pewY = pew.getY();
-			if (!(pewX >= w - edgeFudge || pewX <= edgeFudge || pewY >= h - edgeFudge || pewY <= edgeFudge)) {
+			if (!(pewX >= w || pewX <= 0 || pewY >= h || pewY <= 0)) {
 				pew.update();
 				pewList.add(pew);
 			}

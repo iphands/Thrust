@@ -7,26 +7,28 @@ public class PewPews {
 
 	private List<Pew> pewList = new ArrayList<Pew>();
 
-	public synchronized void addPew(Pew pew) {
+	public void addPew(Pew pew) {
 		pewList.add(pew);
 	}
 
-	public synchronized void setPews(List<Pew> pews) {
+	public void setPews(List<Pew> pews) {
 		pewList = pews;
 	}
 
-	public synchronized List<Pew> getPews() {
-		List<Pew> tmp = new ArrayList<Pew>();
-		tmp.addAll(pewList);
-		return tmp;
+	public List<Pew> getPews() {
+		return pewList;
 	}
 
-	public synchronized void removePew(Pew pew) {
+	public Pew getPew(int index) {
+		return pewList.get(index);
+	}
+
+	public void removePew(Pew pew) {
 		pewList.remove(pewList.indexOf(pew));
 		// pewList.remove(0);
 	}
 
-	public synchronized boolean hasPews() {
+	public boolean hasPews() {
 		// if (pewList.size() > 0) {
 		// return true;
 		// }
@@ -34,7 +36,7 @@ public class PewPews {
 		return !pewList.isEmpty();
 	}
 
-	public synchronized int pewPewSize() {
+	public int pewPewSize() {
 		return pewList.size();
 	}
 
