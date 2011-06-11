@@ -1,5 +1,6 @@
 package org.ahands.game;
 
+import java.awt.BufferCapabilities.FlipContents;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -257,7 +258,7 @@ public class Thrust {
 	final static PewPews exhausts2 = new PewPews();
 	final static PewPews exhausts3 = new PewPews();
 	final static PewPews exhausts4 = new PewPews();
-	static int ticker = 1;
+	static int ticker = 0;
 
 	static long lastShot = Calendar.getInstance().getTimeInMillis();
 	final static float angleSpeed = 3f;
@@ -266,6 +267,7 @@ public class Thrust {
 
 	final static long s = Calendar.getInstance().getTimeInMillis();
 	static int t = 0;
+	final static int flSize = 1;
 
 	/**
 	 * Do all calculations, handle input, etc.
@@ -348,64 +350,38 @@ public class Thrust {
 			}
 		}
 
-		final List<Pew> pewList1 = new ArrayList<Pew>();
-		final List<Pew> pewList2 = new ArrayList<Pew>();
-		final List<Pew> pewList3 = new ArrayList<Pew>();
-		final List<Pew> pewList4 = new ArrayList<Pew>();
-		long start = Calendar.getInstance().getTimeInMillis();
-		for (Pew pew : exhausts.getPews()) {
-			switch (ticker) {
-			case 1:
-				pewList1.add(pew);
-				break;
-			case 2:
-				pewList2.add(pew);
-				break;
-			case 3:
-				pewList3.add(pew);
-				break;
-			case 4:
-				pewList4.add(pew);
-				break;
+		final List<List<Pew>> fList = new ArrayList<List<Pew>>();
+		for (int i = 0; i <= flSize; i++) {
+			fList.add(new ArrayList<Pew>());
+		}
+
+		fList.get(0).addAll(exhausts.getPews());
+		// int i = 0;
+		// for (Pew pew : exhausts.getPews()) {
+		// fList.get(i).add(pew);
+		// i++;
+		// if (i >= flSize) {
+		// i = 0;
+		// }
+		// }
+
+		final List<Thread> tList = new ArrayList<Thread>();
+		for (int j = 0; j <= flSize; j++) {
+			final Thread t = new Thread(new PewSorter(fList.get(j)));
+			t.start();
+		}
+
+		for (Thread t : tList) {
+			try {
+				t.join();
+			} catch (InterruptedException e) {
 			}
-		}
-		long end = Calendar.getInstance().getTimeInMillis();
-		final long wait = end - start;
-		if (wait > longestWait) {
-			System.out.println(wait);
-			longestWait = wait;
-		}
-
-		final PewSorter ps1 = new PewSorter(w, h, pewList1);
-		final PewSorter ps2 = new PewSorter(w, h, pewList2);
-		final PewSorter ps3 = new PewSorter(w, h, pewList3);
-		final PewSorter ps4 = new PewSorter(w, h, pewList4);
-
-		final Thread t1 = new Thread(ps1);
-		final Thread t2 = new Thread(ps2);
-		final Thread t3 = new Thread(ps3);
-		final Thread t4 = new Thread(ps4);
-
-		t1.start();
-		t2.start();
-		t3.start();
-		t4.start();
-
-		try {
-			t1.join();
-			t2.join();
-			t3.join();
-			t4.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 		pewList = new ArrayList<Pew>();
-		pewList.addAll(ps1.getOnScreenPewList());
-		pewList.addAll(ps2.getOnScreenPewList());
-		pewList.addAll(ps3.getOnScreenPewList());
-		pewList.addAll(ps4.getOnScreenPewList());
+		for (int j = 0; j <= flSize; j++) {
+			pewList.addAll(fList.get(j));
+		}
 		exhausts.setPews(pewList);
 
 		// pewList = new ArrayList<Pew>();
@@ -459,8 +435,8 @@ public class Thrust {
 		}
 		updateFPS();
 		ticker++;
-		if (ticker > 4) {
-			ticker = 1;
+		if (ticker >= flSize) {
+			ticker = 0;
 		}
 
 		if (t > 60) {
