@@ -264,6 +264,9 @@ public class Thrust {
 	static List<Pew> pewList = new ArrayList<Pew>();
 	final static int edgeFudge = 0;
 
+	final static long s = Calendar.getInstance().getTimeInMillis();
+	static int t = 0;
+
 	/**
 	 * Do all calculations, handle input, etc.
 	 */
@@ -284,11 +287,13 @@ public class Thrust {
 			angle += 360;
 		}
 
-		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+		// if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+		if (true) {
 			thrusting = true;
 			ySpeed -= (speedTick * -Math.cos(Math.toRadians(angle))) / 4;
 			xSpeed -= (speedTick * Math.sin(Math.toRadians(angle))) / 4;
-			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+			// if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+			if ((true)) {
 				boosting = true;
 				boostTri = (int) (Math.random() * 20) - 55;
 				ySpeed -= ((speedTick * boostTick) * -Math.cos(Math.toRadians(angle))) / 2;
@@ -457,6 +462,12 @@ public class Thrust {
 		if (ticker > 4) {
 			ticker = 1;
 		}
+
+		if (t > 60) {
+			System.out.println(Calendar.getInstance().getTimeInMillis() - s);
+			System.exit(0);
+		}
+		t++;
 	}
 
 	private static long lastFPS;
