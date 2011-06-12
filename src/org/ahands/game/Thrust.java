@@ -258,7 +258,7 @@ public class Thrust {
 	static List<Pew> pewList = new ArrayList<Pew>();
 	final static long s = Calendar.getInstance().getTimeInMillis();
 	static int t = 0;
-	final static int flSize = 200;
+	final static int flSize = 4;
 
 	/**
 	 * Do all calculations, handle input, etc.
@@ -413,7 +413,7 @@ public class Thrust {
 		}
 		updateFPS();
 
-		if (t > 60) {
+		if (t > 15) {
 			System.out.println(Calendar.getInstance().getTimeInMillis() - s);
 			System.exit(0);
 		}
@@ -451,6 +451,6 @@ public class Thrust {
 		fps++;
 	}
 
-	private static long MAX_BOOST_TRIS = 25000;
+	private static long MAX_BOOST_TRIS = 250000;
 	private static long longestWait = 0;
 }
