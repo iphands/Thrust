@@ -349,7 +349,7 @@ public class Thrust {
 			}
 		}
 
-		long start = Calendar.getInstance().getTimeInMillis();
+		// long start = Calendar.getInstance().getTimeInMillis();
 		final List<PewSorter> pewSorters = new ArrayList<PewSorter>(flSize);
 		final List<Thread> threads = new ArrayList<Thread>(flSize);
 		final List<Pew> tmpLst = exhausts.getPews();
@@ -373,12 +373,12 @@ public class Thrust {
 			pewList.addAll(pewSorters.get(j).getOnScreenPewList());
 		}
 		exhausts.setPews(pewList);
-		long end = Calendar.getInstance().getTimeInMillis();
-		final long wait = end - start;
-		// if (wait > longestWait) {
-		System.out.println(wait);
-		longestWait = wait;
-		// }
+		// long end = Calendar.getInstance().getTimeInMillis();
+		// final long wait = end - start;
+		// // if (wait > longestWait) {
+		// System.out.println(wait);
+		// longestWait = wait;
+		// // }
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
 			System.out.println(exhausts.pewPewSize());
