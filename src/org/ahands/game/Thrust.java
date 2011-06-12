@@ -261,7 +261,7 @@ public class Thrust {
 
 	static long lastShot = Calendar.getInstance().getTimeInMillis();
 	final static float angleSpeed = 3f;
-	static List<Pew> pewList = new ArrayList<Pew>();
+	static List<Pew> pewList = new ArrayList<Pew>(500000);
 	final static int edgeFudge = 0;
 
 	final static long s = Calendar.getInstance().getTimeInMillis();
@@ -349,26 +349,24 @@ public class Thrust {
 			}
 		}
 
-		final List<PewSorter> pewSorters = new ArrayList<PewSorter>();
-		final int count = (exhausts.pewPewSize() / flSize);
-		final List<Thread> threads = new ArrayList<Thread>();
 		long start = Calendar.getInstance().getTimeInMillis();
+		final List<PewSorter> pewSorters = new ArrayList<PewSorter>(flSize);
+		final int count = (exhausts.pewPewSize() / flSize);
+		final List<Thread> threads = new ArrayList<Thread>(flSize);
 		for (int i = 0; i <= flSize; i++) {
-
-			List<Pew> tmpLst;
+			final List<Pew> tmpLst;
+			final int shareCount = count * i;
 			if (i == flSize) {
-				tmpLst = exhausts.getPews().subList(count * i, exhausts.pewPewSize());
+				tmpLst = exhausts.getPews().subList(shareCount, exhausts.pewPewSize());
 			} else {
-				tmpLst = exhausts.getPews().subList(count * i, count * (i + 1));
+				tmpLst = exhausts.getPews().subList(shareCount, count * (i + 1));
 			}
-
 			final PewSorter pewSorter = new PewSorter(tmpLst);
 			final Thread thread = new Thread(pewSorter);
 			thread.start();
 			threads.add(thread);
 			pewSorters.add(pewSorter);
 		}
-		pewList = null;
 
 		for (Thread t : threads) {
 			try {
@@ -377,7 +375,7 @@ public class Thrust {
 			}
 		}
 
-		pewList = new ArrayList<Pew>();
+		pewList = new ArrayList<Pew>(500000);
 		for (int j = 0; j <= flSize; j++) {
 			pewList.addAll(pewSorters.get(j).getOnScreenPewList());
 		}

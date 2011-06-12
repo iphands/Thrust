@@ -13,7 +13,7 @@ public class PewSorter implements Runnable {
 
 	@Override
 	public void run() {
-		onScreenPewList = new ArrayList<Pew>();
+		onScreenPewList = new ArrayList<Pew>(50000);
 		for (Pew pew : pewList) {
 			final float pewX = pew.getX();
 			final float pewY = pew.getY();
