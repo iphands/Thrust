@@ -252,21 +252,13 @@ public class Thrust {
 	static int boostTri = -35;
 	static long exhaustColor = 0;
 	final static PewPews pewPews = new PewPews();
-
 	final static PewPews exhausts = new PewPews();
-	final static PewPews exhausts2 = new PewPews();
-	final static PewPews exhausts3 = new PewPews();
-	final static PewPews exhausts4 = new PewPews();
-	static int ticker = 0;
-
 	static long lastShot = Calendar.getInstance().getTimeInMillis();
 	final static float angleSpeed = 3f;
-	static List<Pew> pewList = new ArrayList<Pew>(500000);
-	final static int edgeFudge = 0;
-
+	static List<Pew> pewList = new ArrayList<Pew>();
 	final static long s = Calendar.getInstance().getTimeInMillis();
 	static int t = 0;
-	final static int flSize = 1;
+	final static int flSize = 200;
 
 	/**
 	 * Do all calculations, handle input, etc.
@@ -349,7 +341,7 @@ public class Thrust {
 			}
 		}
 
-		// long start = Calendar.getInstance().getTimeInMillis();
+		long start = Calendar.getInstance().getTimeInMillis();
 		final List<PewSorter> pewSorters = new ArrayList<PewSorter>(flSize);
 		final List<Thread> threads = new ArrayList<Thread>(flSize);
 		final List<Pew> tmpLst = exhausts.getPews();
@@ -368,17 +360,18 @@ public class Thrust {
 			}
 		}
 
-		pewList = new ArrayList<Pew>(500000);
+		long end = Calendar.getInstance().getTimeInMillis();
+		final long wait = end - start;
+		// if (wait > longestWait) {
+		System.out.println(wait);
+		longestWait = wait;
+		// }
+
+		pewList = new ArrayList<Pew>();
 		for (int j = 0; j <= flSize; j++) {
 			pewList.addAll(pewSorters.get(j).getOnScreenPewList());
 		}
 		exhausts.setPews(pewList);
-		// long end = Calendar.getInstance().getTimeInMillis();
-		// final long wait = end - start;
-		// // if (wait > longestWait) {
-		// System.out.println(wait);
-		// longestWait = wait;
-		// // }
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
 			System.out.println(exhausts.pewPewSize());
@@ -419,12 +412,8 @@ public class Thrust {
 			}
 		}
 		updateFPS();
-		ticker++;
-		if (ticker >= flSize) {
-			ticker = 0;
-		}
 
-		if (t > 30) {
+		if (t > 60) {
 			System.out.println(Calendar.getInstance().getTimeInMillis() - s);
 			System.exit(0);
 		}
@@ -462,6 +451,6 @@ public class Thrust {
 		fps++;
 	}
 
-	private static long MAX_BOOST_TRIS = 250000;
+	private static long MAX_BOOST_TRIS = 25000;
 	private static long longestWait = 0;
 }

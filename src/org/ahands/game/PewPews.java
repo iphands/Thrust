@@ -16,21 +16,14 @@ public class PewPews {
 	}
 
 	public List<Pew> getPews() {
-		List<Pew> tmp = new ArrayList<Pew>();
-		tmp.addAll(pewList);
-		return tmp;
+		return pewList;
 	}
 
 	public void removePew(Pew pew) {
 		pewList.remove(pewList.indexOf(pew));
-		// pewList.remove(0);
 	}
 
 	public boolean hasPews() {
-		// if (pewList.size() > 0) {
-		// return true;
-		// }
-		// return false;
 		return !pewList.isEmpty();
 	}
 
