@@ -352,13 +352,16 @@ public class Thrust {
 		final List<PewSorter> pewSorters = new ArrayList<PewSorter>();
 		final int count = (exhausts.pewPewSize() / flSize);
 		final List<Thread> threads = new ArrayList<Thread>();
+		long start = Calendar.getInstance().getTimeInMillis();
 		for (int i = 0; i <= flSize; i++) {
+
 			List<Pew> tmpLst;
 			if (i == flSize) {
 				tmpLst = exhausts.getPews().subList(count * i, exhausts.pewPewSize());
 			} else {
 				tmpLst = exhausts.getPews().subList(count * i, count * (i + 1));
 			}
+
 			final PewSorter pewSorter = new PewSorter(tmpLst);
 			final Thread thread = new Thread(pewSorter);
 			thread.start();
@@ -379,6 +382,12 @@ public class Thrust {
 			pewList.addAll(pewSorters.get(j).getOnScreenPewList());
 		}
 		exhausts.setPews(pewList);
+		long end = Calendar.getInstance().getTimeInMillis();
+		final long wait = end - start;
+		// if (wait > longestWait) {
+		System.out.println(wait);
+		longestWait = wait;
+		// }
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
 			System.out.println(exhausts.pewPewSize());
@@ -462,6 +471,6 @@ public class Thrust {
 		fps++;
 	}
 
-	private static long MAX_BOOST_TRIS = 250000;
+	private static long MAX_BOOST_TRIS = 50000;
 	private static long longestWait = 0;
 }
