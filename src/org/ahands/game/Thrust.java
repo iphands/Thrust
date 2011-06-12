@@ -1,6 +1,5 @@
 package org.ahands.game;
 
-import java.awt.BufferCapabilities.FlipContents;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -267,7 +266,7 @@ public class Thrust {
 
 	final static long s = Calendar.getInstance().getTimeInMillis();
 	static int t = 0;
-	final static int flSize = 1;
+	final static int flSize = 4;
 
 	/**
 	 * Do all calculations, handle input, etc.
@@ -351,19 +350,16 @@ public class Thrust {
 		}
 
 		final List<List<Pew>> fList = new ArrayList<List<Pew>>();
+		final int count = (exhausts.pewPewSize() / flSize);
 		for (int i = 0; i <= flSize; i++) {
-			fList.add(new ArrayList<Pew>());
+			List<Pew> tmpLst;
+			if (i == flSize) {
+				tmpLst = exhausts.getPews().subList(count * i, exhausts.pewPewSize());
+			} else {
+				tmpLst = exhausts.getPews().subList(count * i, count * (i + 1));
+			}
+			fList.add(tmpLst);
 		}
-
-		fList.get(0).addAll(exhausts.getPews());
-		// int i = 0;
-		// for (Pew pew : exhausts.getPews()) {
-		// fList.get(i).add(pew);
-		// i++;
-		// if (i >= flSize) {
-		// i = 0;
-		// }
-		// }
 
 		final List<Thread> tList = new ArrayList<Thread>();
 		for (int j = 0; j <= flSize; j++) {
