@@ -349,9 +349,9 @@ public class Thrust {
 			}
 		}
 
-		final List<List<Pew>> fList = new ArrayList<List<Pew>>();
+		final List<PewSorter> pewSorters = new ArrayList<PewSorter>();
 		final int count = (exhausts.pewPewSize() / flSize);
-		final List<Thread> tList = new ArrayList<Thread>();
+		final List<Thread> threads = new ArrayList<Thread>();
 		for (int i = 0; i <= flSize; i++) {
 			List<Pew> tmpLst;
 			if (i == flSize) {
@@ -359,14 +359,15 @@ public class Thrust {
 			} else {
 				tmpLst = exhausts.getPews().subList(count * i, count * (i + 1));
 			}
-			final Thread t = new Thread(new PewSorter(tmpLst));
-			t.start();
-			tList.add(t);
-			fList.add(tmpLst);
+			final PewSorter pewSorter = new PewSorter(tmpLst);
+			final Thread thread = new Thread(pewSorter);
+			thread.start();
+			threads.add(thread);
+			pewSorters.add(pewSorter);
 		}
 		pewList = null;
 
-		for (Thread t : tList) {
+		for (Thread t : threads) {
 			try {
 				t.join();
 			} catch (InterruptedException e) {
@@ -375,21 +376,9 @@ public class Thrust {
 
 		pewList = new ArrayList<Pew>();
 		for (int j = 0; j <= flSize; j++) {
-			pewList.addAll(fList.get(j));
+			pewList.addAll(pewSorters.get(j).getOnScreenPewList());
 		}
 		exhausts.setPews(pewList);
-		System.out.println(pewList.size());
-
-		// pewList = new ArrayList<Pew>();
-		// for (Pew pew : exhausts.getPews()) {
-		// final float pewX = pew.getX();
-		// final float pewY = pew.getY();
-		// if (!(pewX >= w - edgeFudge || pewX <= edgeFudge || pewY >= h - edgeFudge || pewY <= edgeFudge)) {
-		// pew.update();
-		// pewList.add(pew);
-		// }
-		// }
-		// exhausts.setPews(pewList);
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
 			System.out.println(exhausts.pewPewSize());
@@ -435,7 +424,7 @@ public class Thrust {
 			ticker = 0;
 		}
 
-		if (t > 60) {
+		if (t > 30) {
 			System.out.println(Calendar.getInstance().getTimeInMillis() - s);
 			System.exit(0);
 		}
@@ -473,6 +462,6 @@ public class Thrust {
 		fps++;
 	}
 
-	private static long MAX_BOOST_TRIS = 25000;
+	private static long MAX_BOOST_TRIS = 250000;
 	private static long longestWait = 0;
 }
