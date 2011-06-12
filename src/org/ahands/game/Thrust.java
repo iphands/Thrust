@@ -278,7 +278,7 @@ public class Thrust {
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_X)) {
 			angle -= angleSpeed % 360;
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
+		} else if (true) {
 			angle += angleSpeed % 360;
 		}
 
