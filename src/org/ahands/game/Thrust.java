@@ -351,6 +351,7 @@ public class Thrust {
 
 		final List<List<Pew>> fList = new ArrayList<List<Pew>>();
 		final int count = (exhausts.pewPewSize() / flSize);
+		final List<Thread> tList = new ArrayList<Thread>();
 		for (int i = 0; i <= flSize; i++) {
 			List<Pew> tmpLst;
 			if (i == flSize) {
@@ -358,14 +359,12 @@ public class Thrust {
 			} else {
 				tmpLst = exhausts.getPews().subList(count * i, count * (i + 1));
 			}
+			final Thread t = new Thread(new PewSorter(tmpLst));
+			t.start();
+			tList.add(t);
 			fList.add(tmpLst);
 		}
-
-		final List<Thread> tList = new ArrayList<Thread>();
-		for (int j = 0; j <= flSize; j++) {
-			final Thread t = new Thread(new PewSorter(fList.get(j)));
-			t.start();
-		}
+		pewList = null;
 
 		for (Thread t : tList) {
 			try {
@@ -379,6 +378,7 @@ public class Thrust {
 			pewList.addAll(fList.get(j));
 		}
 		exhausts.setPews(pewList);
+		System.out.println(pewList.size());
 
 		// pewList = new ArrayList<Pew>();
 		// for (Pew pew : exhausts.getPews()) {
