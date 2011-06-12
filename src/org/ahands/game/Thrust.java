@@ -92,7 +92,7 @@ public class Thrust {
 			} else if (Display.isActive()) {
 				logic();
 				render();
-				Display.sync(FRAMERATE);
+				// Display.sync(FRAMERATE);
 			} else {
 				// The window is not in the foreground, so we can allow other
 				// stuff
@@ -266,7 +266,7 @@ public class Thrust {
 
 	final static long s = Calendar.getInstance().getTimeInMillis();
 	static int t = 0;
-	final static int flSize = 4;
+	final static int flSize = 1;
 
 	/**
 	 * Do all calculations, handle input, etc.
@@ -351,17 +351,10 @@ public class Thrust {
 
 		long start = Calendar.getInstance().getTimeInMillis();
 		final List<PewSorter> pewSorters = new ArrayList<PewSorter>(flSize);
-		final int count = (exhausts.pewPewSize() / flSize);
 		final List<Thread> threads = new ArrayList<Thread>(flSize);
+		final List<Pew> tmpLst = exhausts.getPews();
 		for (int i = 0; i <= flSize; i++) {
-			final List<Pew> tmpLst;
-			final int shareCount = count * i;
-			if (i == flSize) {
-				tmpLst = exhausts.getPews().subList(shareCount, exhausts.pewPewSize());
-			} else {
-				tmpLst = exhausts.getPews().subList(shareCount, count * (i + 1));
-			}
-			final PewSorter pewSorter = new PewSorter(tmpLst);
+			final PewSorter pewSorter = new PewSorter(tmpLst, i, flSize);
 			final Thread thread = new Thread(pewSorter);
 			thread.start();
 			threads.add(thread);
@@ -469,6 +462,6 @@ public class Thrust {
 		fps++;
 	}
 
-	private static long MAX_BOOST_TRIS = 50000;
+	private static long MAX_BOOST_TRIS = 250000;
 	private static long longestWait = 0;
 }
