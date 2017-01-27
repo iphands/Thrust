@@ -17,7 +17,7 @@ public class Thrust {
 	public static final String GAME_TITLE = "Thrust";
 
 	/** Desired frame time */
-	private static final int FRAMERATE = 65;
+	private static final int FRAMERATE = 120;
 
 	/** Exit the game */
 	private static boolean finished;
@@ -92,7 +92,7 @@ public class Thrust {
 			} else if (Display.isActive()) {
 				logic();
 				render();
-				// Display.sync(FRAMERATE);
+				Display.sync(FRAMERATE);
 			} else {
 				// The window is not in the foreground, so we can allow other
 				// stuff
@@ -258,7 +258,7 @@ public class Thrust {
 	static List<Pew> pewList = new ArrayList<Pew>();
 	final static long s = Calendar.getInstance().getTimeInMillis();
 	static int t = 0;
-	final static int flSize = 4;
+	final static int flSize = 24;
 
 	/**
 	 * Do all calculations, handle input, etc.
@@ -270,7 +270,7 @@ public class Thrust {
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_X)) {
 			angle -= angleSpeed % 360;
-		} else if (true) {
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
 			angle += angleSpeed % 360;
 		}
 
@@ -280,13 +280,13 @@ public class Thrust {
 			angle += 360;
 		}
 
-		// if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-		if (true) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+		// if (true) {
 			thrusting = true;
 			ySpeed -= (speedTick * -Math.cos(Math.toRadians(angle))) / 4;
 			xSpeed -= (speedTick * Math.sin(Math.toRadians(angle))) / 4;
-			// if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-			if ((true)) {
+			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+			// if ((true)) {
 				boosting = true;
 				boostTri = (int) (Math.random() * 20) - 55;
 				ySpeed -= ((speedTick * boostTick) * -Math.cos(Math.toRadians(angle))) / 2;
@@ -311,12 +311,12 @@ public class Thrust {
 		}
 
 		// long start = Calendar.getInstance().getTimeInMillis();
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && pewPews.pewPewSize() < maxPews) {
-			if (Calendar.getInstance().getTimeInMillis() - lastShot > 100) {
-				pewPews.addPew(new Pew(x, y, angle, xSpeed, ySpeed, false, 11, 0, 8));
-				lastShot = Calendar.getInstance().getTimeInMillis();
-			}
-		}
+//		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && pewPews.pewPewSize() < maxPews) {
+//			if (Calendar.getInstance().getTimeInMillis() - lastShot > 100) {
+//				pewPews.addPew(new Pew(x, y, angle, xSpeed, ySpeed, false, 11, 0, 8));
+//				lastShot = Calendar.getInstance().getTimeInMillis();
+//			}
+//		}
 
 		for (Pew pew : pewPews.getPews()) {
 			pew.update();
@@ -363,7 +363,7 @@ public class Thrust {
 		long end = Calendar.getInstance().getTimeInMillis();
 		final long wait = end - start;
 		// if (wait > longestWait) {
-		System.out.println(wait);
+		//System.out.println(wait);
 		longestWait = wait;
 		// }
 
@@ -372,6 +372,7 @@ public class Thrust {
 			pewList.addAll(pewSorters.get(j).getOnScreenPewList());
 		}
 		exhausts.setPews(pewList);
+		//System.out.println(pewList.size());
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
 			System.out.println(exhausts.pewPewSize());
@@ -413,11 +414,11 @@ public class Thrust {
 		}
 		updateFPS();
 
-		if (t > 15) {
-			System.out.println(Calendar.getInstance().getTimeInMillis() - s);
-			System.exit(0);
-		}
-		t++;
+//		if (t > 650) {
+//			System.out.println(Calendar.getInstance().getTimeInMillis() - s);
+//			System.exit(0);
+//		}
+//		t++;
 	}
 
 	private static long lastFPS;
@@ -451,6 +452,6 @@ public class Thrust {
 		fps++;
 	}
 
-	private static long MAX_BOOST_TRIS = 250000;
+	private static long MAX_BOOST_TRIS = 5000;
 	private static long longestWait = 0;
 }
