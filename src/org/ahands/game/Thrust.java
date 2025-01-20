@@ -29,10 +29,10 @@ public class Thrust {
     private static float angle;
     private static float xSpeed;
     private static float ySpeed;
-    private static float x;
-    private static float y;
-    private final static int w = (int) Math.floor(1920 * 1.5);
-    private final static int h = (int) Math.floor(1080 * 1.5);
+    private final static int w = (int) Math.floor(1920 * 1);
+    private final static int h = (int) Math.floor(1080 * 1);
+    private static float x = (int) Math.floor(w / 2);
+    private static float y = (int) Math.floor(h / 2);
     private Keyboard keyboard;
     private long window;
     private final static long MAX_BOOST_TRIS = 1000;
@@ -113,11 +113,13 @@ public class Thrust {
         GL11.glPushMatrix();
         if (pewPews.hasPews()) {
             GL11.glColor3d(0x00, 0xff, 0x00);
-            GL11.glBegin(GL11.GL_POINTS);
             for (final Pew pew : pewPews.getPews()) {
+                GL11.glBegin(GL11.GL_TRIANGLES);
                 GL11.glVertex2f(pew.getX(), pew.getY());
+                GL11.glVertex2f(pew.getX() + 8, pew.getY() - 8);
+                GL11.glVertex2f(pew.getX() - 8, pew.getY() - 8);
+                GL11.glEnd();
             }
-            GL11.glEnd();
             GL11.glColor3d(0xff, 0xff, 0xff);
         }
 
@@ -130,8 +132,7 @@ public class Thrust {
             for (final Pew pew : pewList) {
                 final float color = (float) (count / (count + (i * 2.1)));
                 GL11.glColor3d(1, .9 - color, 0);
-                // GL11.glColor3d(1, Math.random(), 0);
-
+                // GL11.glColor3d(Math.random(), Math.random(), Math.random());
                 GL11.glVertex2f(pew.getX(), pew.getY());
                 i++;
             }
@@ -240,7 +241,7 @@ public class Thrust {
     final static PewPews pewPews = new PewPews();
     final static PewPews exhausts = new PewPews();
     static long lastShot = Calendar.getInstance().getTimeInMillis();
-    final static float angleSpeed = 3f;
+    final static float angleSpeed = 5f;
     static List<Pew> pewList = new ArrayList<Pew>();
     final static int edgeFudge = 0;
 
@@ -267,13 +268,13 @@ public class Thrust {
 
         if (keyboard.isKeyDown(GLFW.GLFW_KEY_UP)) {
             thrusting = true;
-            ySpeed -= (speedTick * -Math.cos(Math.toRadians(angle))) / 4;
-            xSpeed -= (speedTick * Math.sin(Math.toRadians(angle))) / 4;
+            ySpeed -= (speedTick * -Math.cos(Math.toRadians(angle))) / 2;
+            xSpeed -= (speedTick * Math.sin(Math.toRadians(angle))) / 2;
             if (keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
                 boosting = true;
                 boostTri = (int) (Math.random() * 15) - 55;
-                ySpeed -= ((speedTick * boostTick) * -Math.cos(Math.toRadians(angle))) / 2;
-                xSpeed -= ((speedTick * boostTick) * Math.sin(Math.toRadians(angle))) / 2;
+                ySpeed -= ((speedTick * boostTick) * -Math.cos(Math.toRadians(angle))) / 1.001;
+                xSpeed -= ((speedTick * boostTick) * Math.sin(Math.toRadians(angle))) / 1.001;
             } else {
                 thrustTri = (int) (Math.random() * 10) - 35;
                 boosting = false;
@@ -307,6 +308,7 @@ public class Thrust {
                 pewPews.removePew(pew);
             }
         }
+        pewPews.purge();
 
         if (thrusting) {
             exhaustColor++;
