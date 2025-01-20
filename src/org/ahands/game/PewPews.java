@@ -48,7 +48,7 @@ public class PewPews {
 
     public void purge() {
         for (Integer i : pewPurgeList) {
-            if (pewList.size() > 1) {
+            if (pewList.size() > 10) {
                 pewList.remove((int) i);
             }
         }

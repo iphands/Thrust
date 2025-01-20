@@ -29,8 +29,8 @@ public class Thrust {
     private static float angle;
     private static float xSpeed;
     private static float ySpeed;
-    private final static int w = (int) Math.floor(1920 * 1);
-    private final static int h = (int) Math.floor(1080 * 1);
+    private final static int w = (int) Math.floor(1920 * 1.75);
+    private final static int h = (int) Math.floor(1080 * 1.75);
     private static float x = (int) Math.floor(w / 2);
     private static float y = (int) Math.floor(h / 2);
     private Keyboard keyboard;
@@ -273,8 +273,8 @@ public class Thrust {
             if (keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
                 boosting = true;
                 boostTri = (int) (Math.random() * 15) - 55;
-                ySpeed -= ((speedTick * boostTick) * -Math.cos(Math.toRadians(angle))) / 1.001;
-                xSpeed -= ((speedTick * boostTick) * Math.sin(Math.toRadians(angle))) / 1.001;
+                ySpeed -= ((speedTick * boostTick) * -Math.cos(Math.toRadians(angle))) / 0.28001;
+                xSpeed -= ((speedTick * boostTick) * Math.sin(Math.toRadians(angle))) / 0.28001;
             } else {
                 thrustTri = (int) (Math.random() * 10) - 35;
                 boosting = false;
